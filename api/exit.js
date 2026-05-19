@@ -28,23 +28,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 3. STEP 1: Unlock secondary gate immediately via Shelly
+    // 3. STEP 1: Unlock secondary gate immediately via Shelly Cloud (Universal Endpoint)
     const shellyUrl = `${process.env.SHELLY_SERVER}/device/relay/control`;
     await fetch(shellyUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
-        channel: '0',
-        turn: 'on',
         id: process.env.SHELLY_DEVICE_ID,
-        auth_key: process.env.SHELLY_AUTH_KEY
+        auth_key: process.env.SHELLY_AUTH_KEY,
+        channel: '0',
+        turn: 'on'
       })
     });
     console.log("Exit Sequence: Secondary gate unlocked.");
 
-    // 4. STEP 2: Wait for 5 seconds
-    console.log("Exit Sequence: Waiting 5 seconds...");
-    await delay(5000);
+    // 4. STEP 2: Wait for 6 seconds
+    console.log("Exit Sequence: Waiting 6 seconds...");
+    await delay(6000);
 
     // 5. STEP 3: Unlock main gate via Ring
     const locations = await ringApi.getLocations();

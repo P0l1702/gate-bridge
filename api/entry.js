@@ -34,20 +34,20 @@ export default async function handler(req, res) {
     await myIntercom.unlock();
     console.log("Entry Sequence: Main gate unlocked.");
 
-    // 4. STEP 2: Wait for 5 seconds
-    console.log("Entry Sequence: Waiting 5 seconds...");
-    await delay(5000);
+    // 4. STEP 2: Wait for 6 seconds
+    console.log("Entry Sequence: Waiting 6 seconds...");
+    await delay(6000);
 
-    // 5. STEP 3: Unlock secondary gate via Shelly
+    // 5. STEP 3: Unlock secondary gate via Shelly Cloud (Universal Endpoint)
     const shellyUrl = `${process.env.SHELLY_SERVER}/device/relay/control`;
     await fetch(shellyUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
-        channel: '0',
-        turn: 'on',
         id: process.env.SHELLY_DEVICE_ID,
-        auth_key: process.env.SHELLY_AUTH_KEY
+        auth_key: process.env.SHELLY_AUTH_KEY,
+        channel: '0',
+        turn: 'on'
       })
     });
     console.log("Entry Sequence: Secondary gate unlocked.");
