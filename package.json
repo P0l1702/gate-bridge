@@ -1,0 +1,9 @@
+{
+  "name": "gate-bridge",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "ring-client-api": "^14.3.0"
+  }
+}
