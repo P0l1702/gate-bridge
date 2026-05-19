@@ -13,10 +13,17 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed. Use POST.' });
   }
 
-  // 2. Authentication
+  // 2. Authentication: Validate against multiple tokens
   const authHeader = req.headers.authorization;
-  if (authHeader !== `Bearer ${process.env.MY_SECRET_TOKEN}`) {
-    console.warn("Unauthorized exit attempt blocked.");
+  const validTokens = [
+    `Bearer ${process.env.MYTOKEN}`,
+    `Bearer ${process.env.TOKEN_B}`,
+    `Bearer ${process.env.TOKEN_C}`,
+    `Bearer ${process.env.TOKEN_D}`
+  ];
+  
+  if (!validTokens.includes(authHeader)) {
+    console.warn("Unauthorized access attempt blocked.");
     return res.status(403).json({ error: 'Access Denied. Invalid Token.' });
   }
 
