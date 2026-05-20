@@ -24,11 +24,28 @@ export default async function handler(req, res) {
   try {
     const locations = await ringApi.getLocations();
     const myIntercom = locations[0].intercoms[0];
-    await myIntercom.unlock();
-    console.log("Ring gate unlocked successfully.");
+    
+    // --- MECCANISMO DI RETRY AUTOMATICO ---
+    try {
+      // Primo tentativo
+      await myIntercom.unlock();
+      console.log("Ring gate unlocked al primo colpo.");
+    } catch (firstError) {
+      console.warn("Primo tentativo fallito (Cold Start). Attendo 2 secondi e riprovo...");
+      
+      // Aspetta 2 secondi
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Secondo tentativo automatico
+      await myIntercom.unlock();
+      console.log("Ring gate unlocked al secondo tentativo.");
+    }
+    // --------------------------------------
+
     return res.status(200).json({ message: 'Ring gate unlocked!' });
+
   } catch (error) {
-    console.error("Ring execution error:", error);
+    console.error("Errore irreversibile Ring:", error);
     return res.status(500).json({ error: 'Internal Server Error during Ring unlock.' });
   }
 }
